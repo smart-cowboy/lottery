@@ -26,8 +26,8 @@ contract Ticket is Ownable, ITicket {
      * @param _buyer address of ticket buyer
      * @param _ticketId id of ticket to buy
      */
-    function buy(address _buyer, uint256 _ticketId) external override returns (bool){
-        if (tickets[_ticketId] == address(0))
+    function buy(address _buyer, uint256 _ticketId) external override onlyOwner returns (bool) {
+        if (tickets[_ticketId] != address(0))
             return false;
 
         tickets[_ticketId] = _buyer;

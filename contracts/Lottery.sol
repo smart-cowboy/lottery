@@ -24,14 +24,11 @@ contract Lottery {
      */
     function startLottery(uint256 _ticketCount, uint256 _ticketPrice) public {
         require(!isMiddleOfLottery);
-
+        isMiddleOfLottery = true;
         ticket.createTickets(_ticketCount);
         ticketPrice = _ticketPrice;
         ticketCount = _ticketCount;
-        uint256 ticketNumber = uint256(keccak256(abi.encodePacked(block.difficulty, block.number, "ticketNumber"))) % _ticketCount;
-        ticket.buy(msg.sender, ticketNumber);
         lotteryCreator = msg.sender;
-        ticketCountSold = 1;
     }
 
     /**
@@ -66,6 +63,7 @@ contract Lottery {
         uint256 ticketNumber = uint256(keccak256(abi.encodePacked(block.difficulty, block.number, "ticketNumber"))) % ticketCount;
         address payable ticketOwner = payable(ticket.getTicketOwner(ticketNumber));
         ticketOwner.transfer(prize);
+        isMiddleOfLottery = false;
 
         emit LotteryEnded(ticketOwner);
     }
